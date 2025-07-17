@@ -1,4 +1,3 @@
-// routes/peminjaman.go
 package routes
 
 import (

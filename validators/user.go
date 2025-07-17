@@ -1,4 +1,3 @@
-// validators/user.go
 package validators
 
 import (

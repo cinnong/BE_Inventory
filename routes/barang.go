@@ -1,4 +1,3 @@
-// routes/barang.go
 package routes
 
 import (

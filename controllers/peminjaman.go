@@ -1,4 +1,3 @@
-// controllers/peminjaman.go
 package controllers
 
 import (

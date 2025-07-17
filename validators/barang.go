@@ -1,4 +1,3 @@
-// validators/barang.go
 package validators
 
 import (

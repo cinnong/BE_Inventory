@@ -1,4 +1,3 @@
-// controllers/barang.go
 package controllers
 
 import (

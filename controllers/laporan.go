@@ -1,4 +1,3 @@
-// controllers/laporan.go
 package controllers
 
 import (
