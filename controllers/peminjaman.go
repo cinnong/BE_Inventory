@@ -20,7 +20,19 @@ func SetPeminjamanCollection(db *mongo.Database) {
 	barangCollectionPeminjaman = db.Collection("barang")
 }
 
-
+// GetPeminjamanByID godoc
+// @Summary Get peminjaman by ID
+// @Description Mengambil data peminjaman berdasarkan ID
+// @Tags Peminjaman
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Peminjaman ID"
+// @Success 200 {object} models.Peminjaman "Data peminjaman"
+// @Failure 400 {object} map[string]interface{} "ID tidak valid"
+// @Failure 404 {object} map[string]interface{} "Data peminjaman tidak ditemukan"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /peminjaman/{id} [get]
 func GetPeminjamanByID(c *fiber.Ctx) error {
 	id, err := primitive.ObjectIDFromHex(c.Params("id"))
 	if err != nil {
@@ -39,6 +51,16 @@ func GetPeminjamanByID(c *fiber.Ctx) error {
 	return c.JSON(peminjaman)
 }
 
+// GetAllPeminjaman godoc
+// @Summary Get all peminjaman
+// @Description Mengambil semua data peminjaman
+// @Tags Peminjaman
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {array} models.Peminjaman "List semua peminjaman"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /peminjaman [get]
 func GetAllPeminjaman(c *fiber.Ctx) error {
 	cursor, err := peminjamanCollection.Find(context.Background(), bson.M{})
 	if err != nil {
@@ -52,6 +74,19 @@ func GetAllPeminjaman(c *fiber.Ctx) error {
 	return c.JSON(peminjaman)
 }
 
+// CreatePeminjaman godoc
+// @Summary Create new peminjaman
+// @Description Membuat data peminjaman baru
+// @Tags Peminjaman
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param peminjaman body models.Peminjaman true "Data peminjaman baru"
+// @Success 201 {object} models.Peminjaman "Peminjaman berhasil dibuat"
+// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Failure 404 {object} map[string]interface{} "Barang tidak ditemukan"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /peminjaman [post]
 func CreatePeminjaman(c *fiber.Ctx) error {
 	var data models.Peminjaman
 	if err := c.BodyParser(&data); err != nil {
@@ -95,6 +130,20 @@ func CreatePeminjaman(c *fiber.Ctx) error {
 	return c.Status(201).JSON(data)
 }
 
+// UpdateStatusPeminjaman godoc
+// @Summary Update status peminjaman
+// @Description Mengupdate status peminjaman (dipinjam/dikembalikan)
+// @Tags Peminjaman
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Peminjaman ID"
+// @Param status body object{status=string} true "Status baru"
+// @Success 200 {object} map[string]interface{} "Status berhasil diperbarui"
+// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Failure 404 {object} map[string]interface{} "Data tidak ditemukan"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /peminjaman/{id}/status [put]
 func UpdateStatusPeminjaman(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(idParam)
@@ -137,6 +186,19 @@ func UpdateStatusPeminjaman(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "Status berhasil diperbarui"})
 }
 
+// DeletePeminjaman godoc
+// @Summary Delete peminjaman
+// @Description Menghapus data peminjaman berdasarkan ID
+// @Tags Peminjaman
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Peminjaman ID"
+// @Success 200 {object} map[string]interface{} "Data peminjaman berhasil dihapus"
+// @Failure 400 {object} map[string]interface{} "ID tidak valid"
+// @Failure 404 {object} map[string]interface{} "Data peminjaman tidak ditemukan"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /peminjaman/{id} [delete]
 func DeletePeminjaman(c *fiber.Ctx) error {
     id, err := primitive.ObjectIDFromHex(c.Params("id"))
     if err != nil {

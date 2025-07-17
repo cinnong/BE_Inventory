@@ -19,7 +19,16 @@ func SetBarangCollection(db *mongo.Database) {
 	barangCollection = db.Collection("barang")
 }
 
-
+// GetAllBarang godoc
+// @Summary Get all barang
+// @Description Mengambil semua data barang
+// @Tags Barang
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {array} models.Barang "List semua barang"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /barang [get]
 func GetAllBarang(c *fiber.Ctx) error {
 	cursor, err := barangCollection.Find(context.Background(), bson.M{})
 	if err != nil {
@@ -33,6 +42,18 @@ func GetAllBarang(c *fiber.Ctx) error {
 	return c.JSON(barang)
 }
 
+// GetBarangByID godoc
+// @Summary Get barang by ID
+// @Description Mengambil data barang berdasarkan ID
+// @Tags Barang
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Barang ID"
+// @Success 200 {object} models.Barang "Data barang"
+// @Failure 400 {object} map[string]interface{} "ID tidak valid"
+// @Failure 404 {object} map[string]interface{} "Barang tidak ditemukan"
+// @Router /barang/{id} [get]
 func GetBarangByID(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(idParam)
@@ -49,6 +70,18 @@ func GetBarangByID(c *fiber.Ctx) error {
 	return c.JSON(barang)
 }
 
+// CreateBarang godoc
+// @Summary Create new barang
+// @Description Membuat data barang baru
+// @Tags Barang
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param barang body models.Barang true "Data barang baru"
+// @Success 201 {object} models.Barang "Barang berhasil dibuat"
+// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /barang [post]
 func CreateBarang(c *fiber.Ctx) error {
 	var barang models.Barang
 	if err := c.BodyParser(&barang); err != nil {
@@ -80,6 +113,19 @@ func CreateBarang(c *fiber.Ctx) error {
 	return c.Status(201).JSON(barang)
 }
 
+// UpdateBarang godoc
+// @Summary Update barang
+// @Description Mengupdate data barang berdasarkan ID
+// @Tags Barang
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Barang ID"
+// @Param barang body models.Barang true "Data barang yang akan diupdate"
+// @Success 200 {object} map[string]interface{} "Barang berhasil diupdate"
+// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /barang/{id} [put]
 func UpdateBarang(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(idParam)
@@ -120,6 +166,18 @@ func UpdateBarang(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "Barang berhasil diupdate"})
 }
 
+// DeleteBarang godoc
+// @Summary Delete barang
+// @Description Menghapus data barang berdasarkan ID
+// @Tags Barang
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Barang ID"
+// @Success 200 {object} map[string]interface{} "Barang berhasil dihapus"
+// @Failure 400 {object} map[string]interface{} "ID tidak valid"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /barang/{id} [delete]
 func DeleteBarang(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(idParam)

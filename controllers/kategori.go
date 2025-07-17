@@ -18,6 +18,16 @@ func SetKategoriCollection(db *mongo.Database) {
 	kategoriCollection = db.Collection("kategori")
 }
 
+// GetAllKategori godoc
+// @Summary Get all kategori
+// @Description Mengambil semua data kategori
+// @Tags Kategori
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {array} models.Kategori "List semua kategori"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /kategori [get]
 func GetAllKategori(c *fiber.Ctx) error {
 	cursor, err := kategoriCollection.Find(context.Background(), bson.M{})
 	if err != nil {
@@ -31,6 +41,18 @@ func GetAllKategori(c *fiber.Ctx) error {
 	return c.JSON(kategori)
 }
 
+// GetKategoriByID godoc
+// @Summary Get kategori by ID
+// @Description Mengambil data kategori berdasarkan ID
+// @Tags Kategori
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Kategori ID"
+// @Success 200 {object} models.Kategori "Data kategori"
+// @Failure 400 {object} map[string]interface{} "ID tidak valid"
+// @Failure 404 {object} map[string]interface{} "Kategori tidak ditemukan"
+// @Router /kategori/{id} [get]
 func GetKategoriByID(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(idParam)
@@ -47,6 +69,18 @@ func GetKategoriByID(c *fiber.Ctx) error {
 	return c.JSON(kategori)
 }
 
+// CreateKategori godoc
+// @Summary Create new kategori
+// @Description Membuat data kategori baru
+// @Tags Kategori
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param kategori body models.Kategori true "Data kategori baru"
+// @Success 201 {object} models.Kategori "Kategori berhasil dibuat"
+// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /kategori [post]
 func CreateKategori(c *fiber.Ctx) error {
 	var kategori models.Kategori
 	if err := c.BodyParser(&kategori); err != nil {
@@ -68,6 +102,19 @@ func CreateKategori(c *fiber.Ctx) error {
 	return c.Status(201).JSON(kategori)
 }
 
+// UpdateKategori godoc
+// @Summary Update kategori
+// @Description Mengupdate data kategori berdasarkan ID
+// @Tags Kategori
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Kategori ID"
+// @Param kategori body models.Kategori true "Data kategori yang akan diupdate"
+// @Success 200 {object} map[string]interface{} "Kategori berhasil diupdate"
+// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /kategori/{id} [put]
 func UpdateKategori(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(idParam)
@@ -100,6 +147,18 @@ func UpdateKategori(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "Kategori berhasil diupdate"})
 }
 
+// DeleteKategori godoc
+// @Summary Delete kategori
+// @Description Menghapus data kategori berdasarkan ID
+// @Tags Kategori
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Kategori ID"
+// @Success 200 {object} map[string]interface{} "Kategori berhasil dihapus"
+// @Failure 400 {object} map[string]interface{} "ID tidak valid"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /kategori/{id} [delete]
 func DeleteKategori(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(idParam)

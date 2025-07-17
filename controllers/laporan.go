@@ -16,6 +16,16 @@ func SetLaporanCollection(db *mongo.Database) {
 	dbRef = db
 }
 
+// GetLaporanPeminjaman godoc
+// @Summary Get laporan peminjaman
+// @Description Mengambil laporan peminjaman dengan detail barang dan kategori
+// @Tags Laporan
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {array} object "Laporan peminjaman lengkap"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /laporan/peminjaman [get]
 func GetLaporanPeminjaman(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

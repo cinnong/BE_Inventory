@@ -1,5 +1,29 @@
 basePath: /api
 definitions:
+  models.Barang:
+    properties:
+      id:
+        type: string
+      kategori_id:
+        type: string
+      nama:
+        type: string
+      stok:
+        type: integer
+      tanggal_buat:
+        type: string
+    type: object
+  models.Kategori:
+    properties:
+      deskripsi:
+        type: string
+      id:
+        type: string
+      nama:
+        type: string
+      tanggal_buat:
+        type: string
+    type: object
   models.LoginRequest:
     properties:
       email:
@@ -9,6 +33,25 @@ definitions:
     required:
     - email
     - password
+    type: object
+  models.Peminjaman:
+    properties:
+      barang_id:
+        type: string
+      email_peminjam:
+        type: string
+      id:
+        type: string
+      jumlah:
+        type: integer
+      nama_peminjam:
+        type: string
+      status:
+        type: string
+      tanggal_pinjam:
+        type: string
+      telepon_peminjam:
+        type: string
     type: object
   models.RegisterRequest:
     properties:
@@ -138,6 +181,563 @@ paths:
       summary: Register user baru
       tags:
       - Authentication
+  /barang:
+    get:
+      consumes:
+      - application/json
+      description: Mengambil semua data barang
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List semua barang
+          schema:
+            items:
+              $ref: '#/definitions/models.Barang'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all barang
+      tags:
+      - Barang
+    post:
+      consumes:
+      - application/json
+      description: Membuat data barang baru
+      parameters:
+      - description: Data barang baru
+        in: body
+        name: barang
+        required: true
+        schema:
+          $ref: '#/definitions/models.Barang'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Barang berhasil dibuat
+          schema:
+            $ref: '#/definitions/models.Barang'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create new barang
+      tags:
+      - Barang
+  /barang/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Menghapus data barang berdasarkan ID
+      parameters:
+      - description: Barang ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Barang berhasil dihapus
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ID tidak valid
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete barang
+      tags:
+      - Barang
+    get:
+      consumes:
+      - application/json
+      description: Mengambil data barang berdasarkan ID
+      parameters:
+      - description: Barang ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data barang
+          schema:
+            $ref: '#/definitions/models.Barang'
+        "400":
+          description: ID tidak valid
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Barang tidak ditemukan
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get barang by ID
+      tags:
+      - Barang
+    put:
+      consumes:
+      - application/json
+      description: Mengupdate data barang berdasarkan ID
+      parameters:
+      - description: Barang ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Data barang yang akan diupdate
+        in: body
+        name: barang
+        required: true
+        schema:
+          $ref: '#/definitions/models.Barang'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Barang berhasil diupdate
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update barang
+      tags:
+      - Barang
+  /kategori:
+    get:
+      consumes:
+      - application/json
+      description: Mengambil semua data kategori
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List semua kategori
+          schema:
+            items:
+              $ref: '#/definitions/models.Kategori'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all kategori
+      tags:
+      - Kategori
+    post:
+      consumes:
+      - application/json
+      description: Membuat data kategori baru
+      parameters:
+      - description: Data kategori baru
+        in: body
+        name: kategori
+        required: true
+        schema:
+          $ref: '#/definitions/models.Kategori'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Kategori berhasil dibuat
+          schema:
+            $ref: '#/definitions/models.Kategori'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create new kategori
+      tags:
+      - Kategori
+  /kategori/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Menghapus data kategori berdasarkan ID
+      parameters:
+      - description: Kategori ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Kategori berhasil dihapus
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ID tidak valid
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete kategori
+      tags:
+      - Kategori
+    get:
+      consumes:
+      - application/json
+      description: Mengambil data kategori berdasarkan ID
+      parameters:
+      - description: Kategori ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data kategori
+          schema:
+            $ref: '#/definitions/models.Kategori'
+        "400":
+          description: ID tidak valid
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Kategori tidak ditemukan
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get kategori by ID
+      tags:
+      - Kategori
+    put:
+      consumes:
+      - application/json
+      description: Mengupdate data kategori berdasarkan ID
+      parameters:
+      - description: Kategori ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Data kategori yang akan diupdate
+        in: body
+        name: kategori
+        required: true
+        schema:
+          $ref: '#/definitions/models.Kategori'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Kategori berhasil diupdate
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update kategori
+      tags:
+      - Kategori
+  /laporan/peminjaman:
+    get:
+      consumes:
+      - application/json
+      description: Mengambil laporan peminjaman dengan detail barang dan kategori
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Laporan peminjaman lengkap
+          schema:
+            items:
+              type: object
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get laporan peminjaman
+      tags:
+      - Laporan
+  /laporan/simple:
+    get:
+      consumes:
+      - application/json
+      description: Mengambil data peminjaman sederhana untuk debugging
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data sederhana
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get simple laporan (debugging)
+      tags:
+      - Laporan
+  /peminjaman:
+    get:
+      consumes:
+      - application/json
+      description: Mengambil semua data peminjaman
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List semua peminjaman
+          schema:
+            items:
+              $ref: '#/definitions/models.Peminjaman'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all peminjaman
+      tags:
+      - Peminjaman
+    post:
+      consumes:
+      - application/json
+      description: Membuat data peminjaman baru
+      parameters:
+      - description: Data peminjaman baru
+        in: body
+        name: peminjaman
+        required: true
+        schema:
+          $ref: '#/definitions/models.Peminjaman'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Peminjaman berhasil dibuat
+          schema:
+            $ref: '#/definitions/models.Peminjaman'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Barang tidak ditemukan
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create new peminjaman
+      tags:
+      - Peminjaman
+  /peminjaman/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Menghapus data peminjaman berdasarkan ID
+      parameters:
+      - description: Peminjaman ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data peminjaman berhasil dihapus
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: ID tidak valid
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Data peminjaman tidak ditemukan
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete peminjaman
+      tags:
+      - Peminjaman
+    get:
+      consumes:
+      - application/json
+      description: Mengambil data peminjaman berdasarkan ID
+      parameters:
+      - description: Peminjaman ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data peminjaman
+          schema:
+            $ref: '#/definitions/models.Peminjaman'
+        "400":
+          description: ID tidak valid
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Data peminjaman tidak ditemukan
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get peminjaman by ID
+      tags:
+      - Peminjaman
+  /peminjaman/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Mengupdate status peminjaman (dipinjam/dikembalikan)
+      parameters:
+      - description: Peminjaman ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Status baru
+        in: body
+        name: status
+        required: true
+        schema:
+          properties:
+            status:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status berhasil diperbarui
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Data tidak ditemukan
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update status peminjaman
+      tags:
+      - Peminjaman
 securityDefinitions:
   BearerAuth:
     description: 'JWT token dengan format: Bearer {token}'
