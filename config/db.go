@@ -17,9 +17,7 @@ func ConnectDB() {
 	// Get MongoDB URI from environment variables
 	mongoURI := os.Getenv("MONGODB_URI")
 	if mongoURI == "" {
-		// Fallback to default URI (you can remove this in production)
-		mongoURI = "mongodb+srv://dinaoktafiani04:dina2004@cluster0.e6hyv3q.mongodb.net/InventarisKantor?retryWrites=true&w=majority&appName=InventoryApp"
-		log.Printf("Warning: MONGODB_URI not set in environment, using default")
+		log.Fatal("MONGODB_URI environment variable is required")
 	}
 
 	// Get database name from environment variables
