@@ -26,12 +26,21 @@ import (
 	_ "inventory-backend/docs" // Import swagger docs
 	"inventory-backend/middlewares"
 	"inventory-backend/routes"
+	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 	fiberSwagger "github.com/swaggo/fiber-swagger"
 )
 
 func main() {
+	// Load environment variables
+	err := godotenv.Load()
+	if err != nil {
+		log.Printf("Warning: .env file not found, using default values")
+	}
+
 	app := fiber.New()
 
 	// Middleware
@@ -53,9 +62,16 @@ func main() {
 	// Swagger documentation
 	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 
+	// Get port from environment or use default
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+
 	// Start server
-	err := app.Listen(":3000")
-	if err != nil {
-		panic(err)
+	log.Printf("Server starting on port %s", port)
+	startErr := app.Listen(":" + port)
+	if startErr != nil {
+		panic(startErr)
 	}
 }
