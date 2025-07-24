@@ -698,42 +698,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/laporan/simple": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Mengambil data peminjaman sederhana untuk debugging",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Laporan"
-                ],
-                "summary": "Get simple laporan (debugging)",
-                "responses": {
-                    "200": {
-                        "description": "Data sederhana",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
         "/peminjaman": {
             "get": {
                 "security": [
@@ -741,7 +705,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Mengambil semua data peminjaman",
+                "description": "Mengambil semua data peminjaman dengan opsi pencarian exact match nama peminjam",
                 "consumes": [
                     "application/json"
                 ],
@@ -752,9 +716,17 @@ const docTemplate = `{
                     "Peminjaman"
                 ],
                 "summary": "Get all peminjaman",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Pencarian exact match berdasarkan nama peminjam (case-insensitive)",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "List semua peminjaman",
+                        "description": "Daftar peminjaman",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -763,7 +735,7 @@ const docTemplate = `{
                         }
                     },
                     "500": {
-                        "description": "Internal server error",
+                        "description": "Terjadi kesalahan server",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1147,7 +1119,7 @@ var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:3000",
 	BasePath:         "/api",
-	Schemes:          []string{},
+	Schemes:          []string{"http", "https"},
 	Title:            "Inventory Management API",
 	Description:      "API untuk sistem manajemen inventory dengan authentication JWT",
 	InfoInstanceName: "swagger",

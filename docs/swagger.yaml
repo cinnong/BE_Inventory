@@ -529,45 +529,28 @@ paths:
       summary: Get laporan peminjaman
       tags:
       - Laporan
-  /laporan/simple:
-    get:
-      consumes:
-      - application/json
-      description: Mengambil data peminjaman sederhana untuk debugging
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Data sederhana
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties: true
-            type: object
-      security:
-      - BearerAuth: []
-      summary: Get simple laporan (debugging)
-      tags:
-      - Laporan
   /peminjaman:
     get:
       consumes:
       - application/json
-      description: Mengambil semua data peminjaman
+      description: Mengambil semua data peminjaman dengan opsi pencarian exact match
+        nama peminjam
+      parameters:
+      - description: Pencarian exact match berdasarkan nama peminjam (case-insensitive)
+        in: query
+        name: search
+        type: string
       produces:
       - application/json
       responses:
         "200":
-          description: List semua peminjaman
+          description: Daftar peminjaman
           schema:
             items:
               $ref: '#/definitions/models.Peminjaman'
             type: array
         "500":
-          description: Internal server error
+          description: Terjadi kesalahan server
           schema:
             additionalProperties: true
             type: object
@@ -738,6 +721,9 @@ paths:
       summary: Update status peminjaman
       tags:
       - Peminjaman
+schemes:
+- http
+- https
 securityDefinitions:
   BearerAuth:
     description: 'JWT token dengan format: Bearer {token}'

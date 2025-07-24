@@ -12,6 +12,7 @@
 
 // @host localhost:3000
 // @BasePath /api
+// @schemes http https
 
 // @securityDefinitions.apikey BearerAuth
 // @in header
