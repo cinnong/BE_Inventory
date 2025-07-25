@@ -15,7 +15,8 @@ func RegisterPeminjamanRoutes(router fiber.Router) {
 	peminjaman.Get("/:id", middlewares.JWTMiddleware, controllers.GetPeminjamanByID)
 	peminjaman.Post("/", middlewares.JWTMiddleware, controllers.CreatePeminjaman)
 	
-	// Hanya admin yang bisa update status dan delete
+	// Hanya admin yang bisa update status, jumlah, dan delete
 	peminjaman.Put("/:id", middlewares.JWTMiddleware, middlewares.RequireAdmin, controllers.UpdateStatusPeminjaman)
+	peminjaman.Put("/:id/jumlah", middlewares.JWTMiddleware, middlewares.RequireAdmin, controllers.UpdateJumlahPeminjaman)
 	peminjaman.Delete("/:id", middlewares.JWTMiddleware, middlewares.RequireAdmin, controllers.DeletePeminjaman)
 }

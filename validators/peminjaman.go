@@ -35,6 +35,7 @@ func ValidatePeminjaman(nama string, email string, telp string, jumlah int, stat
 	if jumlah <= 0 {
 		return errors.New("jumlah pinjam harus lebih dari 0")
 	}
+	// Hapus validasi status 'pending', hanya izinkan 'dipinjam' dan 'dikembalikan'
 	if status != "dipinjam" && status != "dikembalikan" {
 		return errors.New("status harus 'dipinjam' atau 'dikembalikan'")
 	}

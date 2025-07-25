@@ -17,9 +17,9 @@ func ValidateRegister(c *fiber.Ctx) error {
 	}
 
 	// Validate username
-	if len(user.Username) < 3 || len(user.Username) > 50 {
+	if len(user.Username) < 2 || len(user.Username) > 50 {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Username harus antara 3-50 karakter",
+			"error": "Username harus antara 2-50 karakter",
 		})
 	}
 
