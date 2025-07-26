@@ -174,8 +174,8 @@ func generateJWTToken(userID primitive.ObjectID, email, role string) (string, er
 
 	// Logging waktu saat token dibuat dan kadaluarsa (dalam WIB)
 	fmt.Println("🔐 JWT Token Generated:")
-	fmt.Println("   Sekarang :", now.In(loc))
-	fmt.Println("   Expired  :", expirationTime.In(loc))
+	fmt.Println("   Sekarang :", now)
+	fmt.Println("   Expired  :", expirationTime.Unix())
 
 	claims := jwt.MapClaims{
 		"user_id": userID.Hex(),
