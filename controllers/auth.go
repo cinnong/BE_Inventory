@@ -160,16 +160,29 @@ func Login(c *fiber.Ctx) error {
 	})
 }
 
+
 func generateJWTToken(userID primitive.ObjectID, email, role string) (string, error) {
-	fmt.Println("Sekarang :", time.Now())
-	fmt.Println("Expired  :", time.Now().Add(24*time.Hour))
+	// Ambil lokasi WIB (Asia/Jakarta)
+	loc, err := time.LoadLocation("Asia/Jakarta")
+	if err != nil {
+		// fallback ke UTC jika gagal ambil lokasi
+		loc = time.UTC
+	}
+
+	now := time.Now()
+	expirationTime := now.Add(24 * time.Hour)
+
+	// Logging waktu saat token dibuat dan kadaluarsa (dalam WIB)
+	fmt.Println("🔐 JWT Token Generated:")
+	fmt.Println("   Sekarang :", now.In(loc))
+	fmt.Println("   Expired  :", expirationTime.In(loc))
 
 	claims := jwt.MapClaims{
 		"user_id": userID.Hex(),
 		"email":   email,
 		"role":    role,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(), // Token expires in 24 hours
-		"iat":     time.Now().Unix(),
+		"exp":     expirationTime.Unix(),
+		"iat":     now.Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
