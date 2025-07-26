@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"inventory-backend/models"
 	"os"
 	"time"
@@ -160,6 +161,9 @@ func Login(c *fiber.Ctx) error {
 }
 
 func generateJWTToken(userID primitive.ObjectID, email, role string) (string, error) {
+	fmt.Println("Sekarang :", time.Now())
+	fmt.Println("Expired  :", time.Now().Add(24*time.Hour))
+
 	claims := jwt.MapClaims{
 		"user_id": userID.Hex(),
 		"email":   email,
@@ -171,6 +175,7 @@ func generateJWTToken(userID primitive.ObjectID, email, role string) (string, er
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtSecret)
 }
+
 
 // GetProfile godoc
 // @Summary Get user profile
