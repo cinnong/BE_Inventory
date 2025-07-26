@@ -169,7 +169,7 @@ func generateJWTToken(userID primitive.ObjectID, email, role string) (string, er
 		loc = time.UTC
 	}
 
-	now := time.Now()
+	now := time.Now().In(loc)
 	expirationTime := now.Add(24 * time.Hour)
 
 	// Logging waktu saat token dibuat dan kadaluarsa (dalam WIB)
