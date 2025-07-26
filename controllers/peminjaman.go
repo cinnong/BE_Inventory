@@ -120,13 +120,11 @@ func CreatePeminjaman(c *fiber.Ctx) error {
 		return c.Status(404).JSON(fiber.Map{"error": "Barang tidak ditemukan"})
 	}
 
-	// Cek stok
-	if data.Jumlah > barang.Stok {
-		return c.Status(400).JSON(fiber.Map{"error": "Stok barang tidak mencukupi"})
-	}
-
-	// Kurangi stok jika status dipinjam
+	// Hanya proses jika status dipinjam
 	if data.Status == "dipinjam" {
+		if data.Jumlah > barang.Stok {
+			return c.Status(400).JSON(fiber.Map{"error": "Stok barang tidak mencukupi"})
+		}
 		_, err = barangCollectionPeminjaman.UpdateOne(context.Background(),
 			bson.M{"_id": barang.ID},
 			bson.M{"$inc": bson.M{"stok": -data.Jumlah}})
@@ -181,13 +179,31 @@ func UpdateStatusPeminjaman(c *fiber.Ctx) error {
 		return c.Status(404).JSON(fiber.Map{"error": "Data tidak ditemukan"})
 	}
 
-	// Jika status dari dipinjam ke dikembalikan, tambahkan stok barang
-	if pinjam.Status == "dipinjam" && updateData.Status == "dikembalikan" {
-		_, err := barangCollection.UpdateOne(context.Background(),
-			bson.M{"_id": pinjam.BarangID},
-			bson.M{"$inc": bson.M{"stok": pinjam.Jumlah}})
-		if err != nil {
-			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	// Otomatisasi stok:
+	if pinjam.Status != updateData.Status {
+		if updateData.Status == "dipinjam" {
+			// Validasi stok sebelum update
+			var barang models.Barang
+			err := barangCollectionPeminjaman.FindOne(context.Background(), bson.M{"_id": pinjam.BarangID}).Decode(&barang)
+			if err != nil {
+				return c.Status(404).JSON(fiber.Map{"error": "Barang tidak ditemukan"})
+			}
+			if pinjam.Jumlah > barang.Stok {
+				return c.Status(400).JSON(fiber.Map{"error": "Stok barang tidak mencukupi"})
+			}
+			_, err = barangCollectionPeminjaman.UpdateOne(context.Background(),
+				bson.M{"_id": pinjam.BarangID},
+				bson.M{"$inc": bson.M{"stok": -pinjam.Jumlah}})
+			if err != nil {
+				return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+			}
+		} else if pinjam.Status == "dipinjam" && updateData.Status == "dikembalikan" {
+			_, err := barangCollectionPeminjaman.UpdateOne(context.Background(),
+				bson.M{"_id": pinjam.BarangID},
+				bson.M{"$inc": bson.M{"stok": pinjam.Jumlah}})
+			if err != nil {
+				return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+			}
 		}
 	}
 
