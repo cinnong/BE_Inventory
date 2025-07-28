@@ -75,7 +75,7 @@ definitions:
     - role
     - username
     type: object
-host: localhost:3000
+host: https://beinventory-production.up.railway.app/
 info:
   contact:
     email: support@swagger.io
