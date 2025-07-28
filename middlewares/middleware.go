@@ -8,7 +8,7 @@ import (
 
 func SetupMiddleware(app *fiber.App) {
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "https://feinventory-production.up.railway.app, http://localhost:5173, http://localhost:5174", // contoh domain react kamu di railway
+		AllowOrigins: "https://feinventory-production.up.railway.app, http://localhost:5173, http://localhost:5174, https://beinventory-production.up.railway.app",
 		AllowCredentials: true,
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 	}))
